@@ -1,0 +1,314 @@
+.conclude-event-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.conclude-content {
+  flex: 1;
+  padding: 2rem;
+  margin-left: 280px;
+  max-width: 1200px;
+}
+
+.conclude-header {
+  margin-bottom: 2rem;
+}
+
+.conclude-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.conclude-header p {
+  color: #6b7280;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.event-info-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.event-info-card h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+}
+
+.event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 1rem;
+  opacity: 0.95;
+}
+
+.no-participants-message {
+  background: white;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.no-participants-message p {
+  color: #6b7280;
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.no-participants-message p:last-of-type {
+  margin-bottom: 2rem;
+}
+
+.winners-form {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.section-description {
+  color: #6b7280;
+  margin: 0 0 2rem 0;
+}
+
+.winners-grid {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.winner-selection-card {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s;
+}
+
+.winner-selection-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.prize-info {
+  margin-bottom: 1.25rem;
+}
+
+.prize-info h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.prize-title {
+  font-size: 1.05rem;
+  color: #667eea;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.prize-description {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.winner-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.2s;
+  background-color: white;
+}
+
+.winner-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.xp-indicator {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.xp-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: white;
+}
+
+.xp-badge.gold {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+.xp-badge.silver {
+  background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+}
+
+.xp-badge.bronze {
+  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+}
+
+.no-prizes-message {
+  padding: 2rem;
+  background-color: #fef3c7;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.no-prizes-message p {
+  color: #92400e;
+  font-size: 1.05rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.participants-info {
+  padding: 1.5rem;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.participants-info h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.participants-info > p {
+  color: #6b7280;
+  margin: 0 0 1rem 0;
+}
+
+.participants-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 0.75rem;
+}
+
+.participant-item {
+  padding: 0.75rem 1rem;
+  background-color: white;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.participant-email {
+  color: #6b7280;
+  font-weight: 400;
+  font-size: 0.875rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn {
+  padding: 0.875rem 1.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #e5e7eb;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+}
+
+@media (max-width: 1024px) {
+  .conclude-content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .conclude-content {
+    padding: 1rem;
+  }
+
+  .winners-form {
+    padding: 1.5rem;
+  }
+
+  .event-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .participants-list {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
