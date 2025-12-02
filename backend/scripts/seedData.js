@@ -28,7 +28,7 @@ const seedData = async () => {
     console.log('🗑️  Clearing existing data...');
     await Room.deleteMany({});
     await Event.deleteMany({});
-    await User.deleteMany({ role: 'SOCIETY_ADMIN' });
+    await User.deleteMany({ role: { $in: ['SOCIETY_ADMIN', 'STUDENT'] } });
     
     console.log('\n📍 Creating rooms...');
     const rooms = [];
@@ -52,7 +52,7 @@ const seedData = async () => {
           facilities: ['Projector', 'AC', 'Sound System', 'Whiteboard'],
           isAvailable: true,
         });
-      });
+      }
     }
     
     rooms.push(
@@ -95,6 +95,30 @@ const seedData = async () => {
     
     await Room.insertMany(rooms);
     console.log(`✅ Created ${rooms.length} rooms`);
+
+    console.log('\n👤 Creating student users...');
+    const students = [
+      { name: 'Alice Johnson', email: 'alice@college.edu', xp: 180, badges: ['Active Participant', 'Event Enthusiast'] },
+      { name: 'Bob Smith', email: 'bob@college.edu', xp: 120, badges: ['Active Participant'] },
+      { name: 'Charlie Brown', email: 'charlie@college.edu', xp: 80, badges: ['Newcomer'] },
+      { name: 'Diana Prince', email: 'diana@college.edu', xp: 50, badges: [] },
+      { name: 'Ethan Hunt', email: 'ethan@college.edu', xp: 30, badges: [] },
+    ];
+
+    const studentUsers = [];
+    for (const student of students) {
+      const user = await User.create({
+        name: student.name,
+        email: student.email,
+        passwordHash: 'password123',
+        role: 'STUDENT',
+        xp: student.xp,
+        badges: student.badges,
+        favoriteCategories: ['Technical', 'Workshops'],
+      });
+      studentUsers.push(user);
+      console.log(`✅ Created student: ${student.name} (${student.xp} XP)`);
+    }
 
     console.log('\n👥 Creating society accounts...');
     const societies = [
@@ -324,16 +348,19 @@ const seedData = async () => {
     console.log('\n✨ Database seeding completed successfully!');
     console.log('\n📋 Summary:');
     console.log(`   • ${rooms.length} rooms created`);
+    console.log(`   • ${studentUsers.length} student accounts created`);
     console.log(`   • ${societyUsers.length} society accounts created`);
     console.log(`   • ${events.length} events created`);
     console.log(`   • 2 past APPROVED events ready to conclude (CCS, MLSC)`);
     console.log(`   • ${events.length - 2} future events pending approval`);
-    console.log('\n🔑 Society Login Credentials:');
-    console.log('   Email: [society-name]@college.edu');
-    console.log('   Password: password123');
-    console.log('\n   Examples:');
+    console.log('\n🔑 Login Credentials (Password: password123):');
+    console.log('\n   Students:');
+    students.forEach(s => {
+      console.log(`   • ${s.email} (${s.xp} XP)`);
+    });
+    console.log('\n   Societies:');
     societies.forEach(s => {
-      console.log(`   • ${s.email} / password123`);
+      console.log(`   • ${s.email}`);
     });
 
   } catch (error) {
