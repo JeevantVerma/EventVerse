@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import PublicNavbar from '../components/Navbar/PublicNavbar';
 import StudentNavbar from '../components/Navbar/StudentNavbar';
+import Footer from '../components/Footer/Footer';
 import { useToast } from '../components/Toast/Toast';
 import './Contact.css';
 
