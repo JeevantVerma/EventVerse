@@ -255,7 +255,7 @@ const EventDetail = () => {
 
             {event.proposalPdfUrl && (user?.role === 'SUPER_ADMIN' || user?.role === 'SOCIETY_ADMIN') && (
               <a
-                href={`http://localhost:5000${event.proposalPdfUrl}`}
+                href={`http://localhost:3001${event.proposalPdfUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-view-proposal"

@@ -171,7 +171,7 @@ const Approvals = () => {
                 <div className="approval-actions">
                   {event.proposalPdfUrl && (
                     <a
-                      href={`http://localhost:5000${event.proposalPdfUrl}`}
+                      href={`http://localhost:3001${event.proposalPdfUrl}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-view-proposal"
