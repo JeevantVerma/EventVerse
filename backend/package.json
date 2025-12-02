@@ -7,6 +7,12 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
+
+    "pm2:start": "pm2 start server.js --name eventverse-backend",
+    "pm2:restart": "pm2 restart eventverse-backend",
+    "pm2:stop": "pm2 stop eventverse-backend",
+    "pm2:logs": "pm2 logs eventverse-backend",
+
     "seed": "node scripts/seedData.js"
   },
   "keywords": ["event-management", "college", "express", "mongodb"],
