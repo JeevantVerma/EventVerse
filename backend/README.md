@@ -33,7 +33,7 @@ cp .env.example .env
 
 3. Update `.env` with your configuration:
 ```
-PORT=5000
+PORT=3001
 MONGODB_URI=mongodb://localhost:27017/eventverse
 JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
 NODE_ENV=development

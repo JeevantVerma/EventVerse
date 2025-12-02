@@ -4,11 +4,6 @@ import { authenticate, authorize } from '../middleware/auth.js';
 
 const router = express.Router();
 
-/**
- * @route   GET /api/approvals/events
- * @desc    Get all events pending approval (SUPER_ADMIN only)
- * @access  Private (SUPER_ADMIN)
- */
 router.get('/events', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   try {
     const pendingEvents = await Event.find({ status: 'PENDING_APPROVAL' })
@@ -31,11 +26,6 @@ router.get('/events', authenticate, authorize('SUPER_ADMIN'), async (req, res) =
   }
 });
 
-/**
- * @route   POST /api/approvals/events/:id/approve
- * @desc    Approve an event (SUPER_ADMIN only)
- * @access  Private (SUPER_ADMIN)
- */
 router.post('/events/:id/approve', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   try {
     const { remarks } = req.body;
@@ -78,11 +68,6 @@ router.post('/events/:id/approve', authenticate, authorize('SUPER_ADMIN'), async
   }
 });
 
-/**
- * @route   POST /api/approvals/events/:id/reject
- * @desc    Reject an event (SUPER_ADMIN only)
- * @access  Private (SUPER_ADMIN)
- */
 router.post('/events/:id/reject', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   try {
     const { remarks } = req.body;
@@ -130,11 +115,6 @@ router.post('/events/:id/reject', authenticate, authorize('SUPER_ADMIN'), async 
   }
 });
 
-/**
- * @route   GET /api/approvals/events/all
- * @desc    Get all events for super admin (all statuses)
- * @access  Private (SUPER_ADMIN)
- */
 router.get('/events/all', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   try {
     const events = await Event.find()

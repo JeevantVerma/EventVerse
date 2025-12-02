@@ -20,7 +20,7 @@ npm install
 New-Item .env
 
 # Add these lines to .env:
-# PORT=5000
+# PORT=3001
 # MONGODB_URI=mongodb://localhost:27017/eventverse
 # JWT_SECRET=your_super_secret_key_change_in_production
 
@@ -29,7 +29,7 @@ New-Item .env
 
 # Start the backend server
 npm start
-# Server will run on http://localhost:5000
+# Server will run on http://localhost:3001
 ```
 
 ### 2. Frontend Setup
@@ -141,12 +141,12 @@ Or logout and login again
 Use Postman, Thunder Client, or curl:
 ```bash
 # Login
-curl -X POST http://localhost:5000/api/auth/login \
+curl -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"test@test.com","password":"password123"}'
 
 # Get events (with auth token)
-curl http://localhost:5000/api/events \
+curl http://localhost:3001/api/events \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -160,7 +160,7 @@ curl http://localhost:5000/api/events \
 
 ### Backend (.env)
 ```env
-PORT=5000
+PORT=3001
 MONGODB_URI=mongodb://localhost:27017/eventverse
 JWT_SECRET=your_secret_key_min_32_chars
 NODE_ENV=development
@@ -168,7 +168,7 @@ NODE_ENV=development
 
 ### Frontend (Optional .env)
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:3001/api
 ```
 
 ## Database Seeding (Optional)

@@ -8,11 +8,6 @@ import { calculateXP, awardXPToUsers } from '../utils/xpSystem.js';
 
 const router = express.Router();
 
-/**
- * @route   POST /api/events
- * @desc    Create a new event (SOCIETY_ADMIN only)
- * @access  Private (SOCIETY_ADMIN)
- */
 router.post('/', authenticate, authorize('SOCIETY_ADMIN'), uploadProposal.single('proposalPdf'), async (req, res) => {
   try {
     const {
@@ -26,7 +21,6 @@ router.post('/', authenticate, authorize('SOCIETY_ADMIN'), uploadProposal.single
       submitForApproval,
     } = req.body;
 
-    // Validate required fields
     if (!title || !category || !description || !startDateTime || !endDateTime || !maxParticipants) {
       return res.status(400).json({
         success: false,
@@ -34,7 +28,6 @@ router.post('/', authenticate, authorize('SOCIETY_ADMIN'), uploadProposal.single
       });
     }
 
-    // Parse prizes if sent as JSON string
     let parsedPrizes = [];
     if (prizes) {
       try {
@@ -47,10 +40,8 @@ router.post('/', authenticate, authorize('SOCIETY_ADMIN'), uploadProposal.single
       }
     }
 
-    // Check for time clashes (warning only)
     const clashes = await checkEventTimeClashes(new Date(startDateTime), new Date(endDateTime));
     
-    // Determine status - events with proposal PDF go directly to pending approval
     let status = 'DRAFT';
     if (req.file) {
       status = 'PENDING_APPROVAL';
@@ -61,7 +52,6 @@ router.post('/', authenticate, authorize('SOCIETY_ADMIN'), uploadProposal.single
       });
     }
 
-    // Create event
     const event = new Event({
       title,
       societyId: req.user._id,
@@ -96,16 +86,10 @@ router.post('/', authenticate, authorize('SOCIETY_ADMIN'), uploadProposal.single
   }
 });
 
-/**
- * @route   GET /api/events
- * @desc    Get list of events with filters
- * @access  Public
- */
 router.get('/', async (req, res) => {
   try {
     const { status, category, societyName, startDate, endDate, search } = req.query;
 
-    // Build query
     const query = {};
 
     if (status) {
@@ -156,11 +140,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-/**
- * @route   GET /api/events/:id
- * @desc    Get single event details
- * @access  Public
- */
 router.get('/:id', async (req, res) => {
   try {
     const event = await Event.findById(req.params.id)
@@ -189,16 +168,10 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-/**
- * @route   PUT /api/events/:id
- * @desc    Update an event (only by owning SOCIETY_ADMIN)
- * @access  Private (SOCIETY_ADMIN owner)
- */
 router.put('/:id', authenticate, authorize('SOCIETY_ADMIN'), checkEventOwnership, uploadProposal.single('proposalPdf'), async (req, res) => {
   try {
     const event = req.event;
 
-    // Don't allow editing completed events
     if (event.status === 'COMPLETED') {
       return res.status(400).json({
         success: false,
@@ -217,13 +190,11 @@ router.put('/:id', authenticate, authorize('SOCIETY_ADMIN'), checkEventOwnership
       submitForApproval,
     } = req.body;
 
-    // Update fields
     if (title) event.title = title;
     if (category) event.category = category;
     if (description) event.description = description;
     if (maxParticipants) event.maxParticipants = parseInt(maxParticipants);
 
-    // Parse and update prizes
     if (prizes) {
       try {
         event.prizes = typeof prizes === 'string' ? JSON.parse(prizes) : prizes;
@@ -235,7 +206,6 @@ router.put('/:id', authenticate, authorize('SOCIETY_ADMIN'), checkEventOwnership
       }
     }
 
-    // Update date/time and check clashes
     let clashes = [];
     if (startDateTime || endDateTime) {
       const newStartDate = startDateTime ? new Date(startDateTime) : event.startDateTime;
@@ -254,12 +224,10 @@ router.put('/:id', authenticate, authorize('SOCIETY_ADMIN'), checkEventOwnership
       event.endDateTime = newEndDate;
     }
 
-    // Update proposal PDF
     if (req.file) {
       event.proposalPdfUrl = `/uploads/proposals/${req.file.filename}`;
     }
 
-    // Update status if submitting for approval
     if (submitForApproval && event.proposalPdfUrl) {
       event.status = 'PENDING_APPROVAL';
     }
@@ -283,16 +251,10 @@ router.put('/:id', authenticate, authorize('SOCIETY_ADMIN'), checkEventOwnership
   }
 });
 
-/**
- * @route   DELETE /api/events/:id
- * @desc    Delete an event (only by owning SOCIETY_ADMIN)
- * @access  Private (SOCIETY_ADMIN owner)
- */
 router.delete('/:id', authenticate, authorize('SOCIETY_ADMIN'), checkEventOwnership, async (req, res) => {
   try {
     const event = req.event;
 
-    // Don't allow deleting approved or completed events
     if (['APPROVED', 'COMPLETED'].includes(event.status)) {
       return res.status(400).json({
         success: false,
@@ -316,11 +278,6 @@ router.delete('/:id', authenticate, authorize('SOCIETY_ADMIN'), checkEventOwners
   }
 });
 
-/**
- * @route   POST /api/events/:id/register
- * @desc    Register for an event (STUDENT only)
- * @access  Private (STUDENT)
- */
 router.post('/:id/register', authenticate, authorize('STUDENT'), async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -343,7 +300,6 @@ router.post('/:id/register', authenticate, authorize('STUDENT'), async (req, res
       maxParticipants: event.maxParticipants
     });
 
-    // Check if event is approved
     if (event.status !== 'APPROVED') {
       return res.status(400).json({
         success: false,
@@ -351,7 +307,6 @@ router.post('/:id/register', authenticate, authorize('STUDENT'), async (req, res
       });
     }
 
-    // Check if event has already happened
     if (new Date() > event.endDateTime) {
       return res.status(400).json({
         success: false,
@@ -359,7 +314,6 @@ router.post('/:id/register', authenticate, authorize('STUDENT'), async (req, res
       });
     }
 
-    // Check if already registered
     if (event.registeredParticipants.includes(req.user._id)) {
       return res.status(400).json({
         success: false,
@@ -367,7 +321,6 @@ router.post('/:id/register', authenticate, authorize('STUDENT'), async (req, res
       });
     }
 
-    // Check if event is full
     if (event.registeredParticipants.length >= event.maxParticipants) {
       return res.status(400).json({
         success: false,
@@ -375,11 +328,9 @@ router.post('/:id/register', authenticate, authorize('STUDENT'), async (req, res
       });
     }
 
-    // Register user
     event.registeredParticipants.push(req.user._id);
     await event.save();
 
-    // Award XP for registration
     const student = await User.findById(req.user._id);
     student.awardXP(10); // 10 XP for registering
     await student.save();
@@ -406,11 +357,6 @@ router.post('/:id/register', authenticate, authorize('STUDENT'), async (req, res
   }
 });
 
-/**
- * @route   DELETE /api/events/:id/register
- * @desc    Cancel registration for an event (STUDENT only)
- * @access  Private (STUDENT)
- */
 router.delete('/:id/register', authenticate, authorize('STUDENT'), async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -422,7 +368,6 @@ router.delete('/:id/register', authenticate, authorize('STUDENT'), async (req, r
       });
     }
 
-    // Check if registered
     if (!event.registeredParticipants.includes(req.user._id)) {
       return res.status(400).json({
         success: false,
@@ -430,7 +375,6 @@ router.delete('/:id/register', authenticate, authorize('STUDENT'), async (req, r
       });
     }
 
-    // Check if event has started
     if (new Date() > event.startDateTime) {
       return res.status(400).json({
         success: false,
@@ -438,7 +382,6 @@ router.delete('/:id/register', authenticate, authorize('STUDENT'), async (req, r
       });
     }
 
-    // Remove registration
     event.registeredParticipants = event.registeredParticipants.filter(
       id => id.toString() !== req.user._id.toString()
     );
@@ -458,17 +401,11 @@ router.delete('/:id/register', authenticate, authorize('STUDENT'), async (req, r
   }
 });
 
-/**
- * @route   POST /api/events/:id/conclude
- * @desc    Mark event as completed and assign winners (SOCIETY_ADMIN owner only)
- * @access  Private (SOCIETY_ADMIN owner)
- */
 router.post('/:id/conclude', authenticate, authorize('SOCIETY_ADMIN'), checkEventOwnership, async (req, res) => {
   try {
     const event = req.event;
     const { winners } = req.body;
 
-    // Validate event status
     if (event.status === 'COMPLETED') {
       return res.status(400).json({
         success: false,
@@ -483,11 +420,9 @@ router.post('/:id/conclude', authenticate, authorize('SOCIETY_ADMIN'), checkEven
       });
     }
 
-    // Validate winners
     if (winners) {
       const winnersMap = new Map();
       for (const [position, userId] of Object.entries(winners)) {
-        // Check if user is a participant
         if (!event.registeredParticipants.some(id => id.toString() === userId)) {
           return res.status(400).json({
             success: false,
@@ -498,7 +433,6 @@ router.post('/:id/conclude', authenticate, authorize('SOCIETY_ADMIN'), checkEven
       }
       event.winners = winnersMap;
 
-      // Award XP to winners
       for (const [position, userId] of winnersMap.entries()) {
         let xpType = 'participant';
         if (position.toLowerCase().includes('first')) xpType = 'winner_first';
@@ -510,14 +444,12 @@ router.post('/:id/conclude', authenticate, authorize('SOCIETY_ADMIN'), checkEven
       }
     }
 
-    // Award base XP to all participants
     const participantIds = event.registeredParticipants.filter(
       id => !Array.from(event.winners.values()).includes(id.toString())
     );
     const baseXP = calculateXP('participant');
     await awardXPToUsers(participantIds, baseXP);
 
-    // Mark as completed
     event.status = 'COMPLETED';
     await event.save();
 

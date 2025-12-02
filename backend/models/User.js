@@ -28,23 +28,19 @@ const userSchema = new mongoose.Schema(
     societyName: {
       type: String,
       default: null,
-      // Only applicable for SOCIETY_ADMIN role
     },
     favoriteCategories: {
       type: [String],
       default: [],
-      // For STUDENT role - used for personalized recommendations
     },
     xp: {
       type: Number,
       default: 0,
       min: 0,
-      // XP accumulation for STUDENT role
     },
     badges: {
       type: [String],
       default: [],
-      // Badge labels like 'Active Participant', 'Event Enthusiast', etc.
     },
   },
   {
@@ -52,7 +48,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Hash password before saving
 userSchema.pre('save', async function (next) {
   if (!this.isModified('passwordHash')) {
     return next();
@@ -67,16 +62,13 @@ userSchema.pre('save', async function (next) {
   }
 });
 
-// Method to compare passwords
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.passwordHash);
 };
 
-// Award XP and update badges
 userSchema.methods.awardXP = function (points) {
   this.xp += points;
   
-  // Badge milestone logic
   const badges = [];
   if (this.xp >= 50 && !this.badges.includes('Newcomer')) {
     badges.push('Newcomer');
@@ -91,7 +83,6 @@ userSchema.methods.awardXP = function (points) {
     badges.push('Campus Legend');
   }
   
-  // Add new badges
   badges.forEach(badge => {
     if (!this.badges.includes(badge)) {
       this.badges.push(badge);
@@ -101,12 +92,10 @@ userSchema.methods.awardXP = function (points) {
   return this;
 };
 
-// Method to compare password
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.passwordHash);
 };
 
-// Hide sensitive data when converting to JSON
 userSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.passwordHash;

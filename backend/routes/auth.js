@@ -5,23 +5,16 @@ import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Generate JWT token
 const generateToken = (userId, role) => {
   return jwt.sign({ userId, role }, process.env.JWT_SECRET, {
     expiresIn: '7d',
   });
 };
 
-/**
- * @route   POST /api/auth/register-student
- * @desc    Register a new student user
- * @access  Public
- */
 router.post('/register-student', async (req, res) => {
   try {
     const { name, email, password, favoriteCategories } = req.body;
 
-    // Validate input
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -29,7 +22,6 @@ router.post('/register-student', async (req, res) => {
       });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
@@ -38,18 +30,16 @@ router.post('/register-student', async (req, res) => {
       });
     }
 
-    // Create new student user
     const user = new User({
       name,
       email,
-      passwordHash: password, // Will be hashed by pre-save hook
+      passwordHash: password,
       role: 'STUDENT',
       favoriteCategories: favoriteCategories || [],
     });
 
     await user.save();
 
-    // Generate token
     const token = generateToken(user._id, user.role);
 
     res.status(201).json({
@@ -76,16 +66,10 @@ router.post('/register-student', async (req, res) => {
   }
 });
 
-/**
- * @route   POST /api/auth/register-admin
- * @desc    Register a new society admin or super admin (restricted)
- * @access  Public (should be restricted in production)
- */
 router.post('/register-admin', async (req, res) => {
   try {
     const { name, email, password, role, societyName } = req.body;
 
-    // Validate input
     if (!name || !email || !password || !role) {
       return res.status(400).json({
         success: false,
@@ -107,7 +91,6 @@ router.post('/register-admin', async (req, res) => {
       });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
@@ -116,7 +99,6 @@ router.post('/register-admin', async (req, res) => {
       });
     }
 
-    // Create new admin user
     const user = new User({
       name,
       email,
@@ -127,7 +109,6 @@ router.post('/register-admin', async (req, res) => {
 
     await user.save();
 
-    // Generate token
     const token = generateToken(user._id, user.role);
 
     res.status(201).json({
@@ -152,17 +133,11 @@ router.post('/register-admin', async (req, res) => {
   }
 });
 
-/**
- * @route   POST /api/auth/login
- * @desc    Login user and return JWT
- * @access  Public
- */
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log('Login attempt for:', email);
 
-    // Validate input
     if (!email || !password) {
       console.log('Missing email or password');
       return res.status(400).json({
@@ -171,7 +146,6 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Find user by email
     const user = await User.findOne({ email });
     console.log('User found:', user ? 'Yes' : 'No');
     if (!user) {
@@ -186,7 +160,6 @@ router.post('/login', async (req, res) => {
     console.log('Password hash exists:', !!user.passwordHash);
     console.log('comparePassword method exists:', typeof user.comparePassword);
 
-    // Check password
     const isPasswordValid = await user.comparePassword(password);
     console.log('Password valid:', isPasswordValid);
     
@@ -198,14 +171,12 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Generate token
     const token = generateToken(user._id, user.role);
 
-    // Set cookie (optional, for HTTP-only cookie approach)
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.json({
@@ -233,11 +204,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-/**
- * @route   POST /api/auth/logout
- * @desc    Logout user and clear token
- * @access  Private
- */
 router.post('/logout', authenticate, (req, res) => {
   res.clearCookie('token');
   res.json({
@@ -246,11 +212,6 @@ router.post('/logout', authenticate, (req, res) => {
   });
 });
 
-/**
- * @route   GET /api/auth/me
- * @desc    Get current user profile
- * @access  Private
- */
 router.get('/me', authenticate, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-passwordHash');

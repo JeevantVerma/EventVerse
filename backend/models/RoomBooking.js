@@ -52,7 +52,6 @@ const roomBookingSchema = new mongoose.Schema(
   }
 );
 
-// Index for efficient availability queries
 roomBookingSchema.index({ roomId: 1, startDateTime: 1, endDateTime: 1, status: 1 });
 
 const RoomBooking = mongoose.model('RoomBooking', roomBookingSchema);

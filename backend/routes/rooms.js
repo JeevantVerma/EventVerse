@@ -7,11 +7,6 @@ import { checkRoomClashes, getAvailableRooms } from '../utils/clashDetection.js'
 
 const router = express.Router();
 
-/**
- * @route   GET /api/rooms
- * @desc    Get all rooms
- * @access  Public
- */
 router.get('/', async (req, res) => {
   try {
     const rooms = await Room.find().sort({ name: 1 });
@@ -31,11 +26,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-/**
- * @route   POST /api/rooms
- * @desc    Create a new room (SUPER_ADMIN only)
- * @access  Private (SUPER_ADMIN)
- */
 router.post('/', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   try {
     const { name, location, capacity, resources } = req.body;
@@ -71,11 +61,6 @@ router.post('/', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   }
 });
 
-/**
- * @route   PUT /api/rooms/:id
- * @desc    Update a room (SUPER_ADMIN only)
- * @access  Private (SUPER_ADMIN)
- */
 router.put('/:id', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   try {
     const { name, location, capacity, resources } = req.body;
@@ -111,11 +96,6 @@ router.put('/:id', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   }
 });
 
-/**
- * @route   DELETE /api/rooms/:id
- * @desc    Delete a room (SUPER_ADMIN only)
- * @access  Private (SUPER_ADMIN)
- */
 router.delete('/:id', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   try {
     const room = await Room.findById(req.params.id);
@@ -127,7 +107,6 @@ router.delete('/:id', authenticate, authorize('SUPER_ADMIN'), async (req, res) =
       });
     }
 
-    // Check if room has active bookings
     const activeBookings = await RoomBooking.countDocuments({
       roomId: req.params.id,
       status: 'CONFIRMED',
@@ -157,11 +136,6 @@ router.delete('/:id', authenticate, authorize('SUPER_ADMIN'), async (req, res) =
   }
 });
 
-/**
- * @route   GET /api/rooms/availability
- * @desc    Get available rooms for a time slot
- * @access  Public
- */
 router.get('/availability', async (req, res) => {
   try {
     const { startDateTime, endDateTime } = req.query;
@@ -193,11 +167,6 @@ router.get('/availability', async (req, res) => {
   }
 });
 
-/**
- * @route   GET /api/rooms/bookings/my-bookings
- * @desc    Get all bookings for the current user
- * @access  Private (SOCIETY_ADMIN)
- */
 router.get('/bookings/my-bookings', authenticate, authorize('SOCIETY_ADMIN'), async (req, res) => {
   try {
     const bookings = await RoomBooking.find({ bookedBy: req.user._id })
@@ -220,11 +189,6 @@ router.get('/bookings/my-bookings', authenticate, authorize('SOCIETY_ADMIN'), as
   }
 });
 
-/**
- * @route   GET /api/rooms/bookings/pending
- * @desc    Get all pending room bookings for approval (SUPER_ADMIN only)
- * @access  Private (SUPER_ADMIN)
- */
 router.get('/bookings/pending', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   try {
     const bookings = await RoomBooking.find({ status: 'PENDING_APPROVAL' })
@@ -248,11 +212,6 @@ router.get('/bookings/pending', authenticate, authorize('SUPER_ADMIN'), async (r
   }
 });
 
-/**
- * @route   POST /api/rooms/bookings/:id/approve
- * @desc    Approve a room booking (SUPER_ADMIN only)
- * @access  Private (SUPER_ADMIN)
- */
 router.post('/bookings/:id/approve', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   try {
     const booking = await RoomBooking.findById(req.params.id);
@@ -291,11 +250,6 @@ router.post('/bookings/:id/approve', authenticate, authorize('SUPER_ADMIN'), asy
   }
 });
 
-/**
- * @route   POST /api/rooms/bookings/:id/reject
- * @desc    Reject a room booking (SUPER_ADMIN only)
- * @access  Private (SUPER_ADMIN)
- */
 router.post('/bookings/:id/reject', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   try {
     const { remarks } = req.body;
@@ -323,7 +277,6 @@ router.post('/bookings/:id/reject', authenticate, authorize('SUPER_ADMIN'), asyn
     }
     await booking.save();
 
-    // Clear room info from event
     if (booking.eventId) {
       const event = await Event.findById(booking.eventId);
       if (event) {
@@ -348,11 +301,6 @@ router.post('/bookings/:id/reject', authenticate, authorize('SUPER_ADMIN'), asyn
   }
 });
 
-/**
- * @route   POST /api/events/:id/book-room
- * @desc    Book a room for an event (SOCIETY_ADMIN owner only)
- * @access  Private (SOCIETY_ADMIN)
- */
 router.post('/:eventId/book-room', authenticate, authorize('SOCIETY_ADMIN'), async (req, res) => {
   try {
     const { roomId } = req.body;
@@ -373,7 +321,6 @@ router.post('/:eventId/book-room', authenticate, authorize('SOCIETY_ADMIN'), asy
       });
     }
 
-    // Check ownership
     if (event.createdBy.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
@@ -381,7 +328,6 @@ router.post('/:eventId/book-room', authenticate, authorize('SOCIETY_ADMIN'), asy
       });
     }
 
-    // Check if room exists
     const room = await Room.findById(roomId);
     if (!room) {
       return res.status(404).json({
@@ -390,7 +336,6 @@ router.post('/:eventId/book-room', authenticate, authorize('SOCIETY_ADMIN'), asy
       });
     }
 
-    // Check for room clashes
     const clashes = await checkRoomClashes(
       roomId,
       event.startDateTime,
@@ -405,7 +350,6 @@ router.post('/:eventId/book-room', authenticate, authorize('SOCIETY_ADMIN'), asy
       });
     }
 
-    // Create booking
     const booking = new RoomBooking({
       eventId: event._id,
       roomId,
@@ -417,7 +361,6 @@ router.post('/:eventId/book-room', authenticate, authorize('SOCIETY_ADMIN'), asy
 
     await booking.save();
 
-    // Update event with room info
     event.roomId = roomId;
     event.roomName = room.name;
     await event.save();
@@ -437,11 +380,6 @@ router.post('/:eventId/book-room', authenticate, authorize('SOCIETY_ADMIN'), asy
   }
 });
 
-/**
- * @route   GET /api/events/:id/bookings
- * @desc    Get booking details for an event
- * @access  Public
- */
 router.get('/:eventId/bookings', async (req, res) => {
   try {
     const bookings = await RoomBooking.find({ eventId: req.params.eventId })
@@ -463,11 +401,6 @@ router.get('/:eventId/bookings', async (req, res) => {
   }
 });
 
-/**
- * @route   DELETE /api/bookings/:id
- * @desc    Cancel a room booking (SOCIETY_ADMIN owner only)
- * @access  Private (SOCIETY_ADMIN)
- */
 router.delete('/bookings/:id', authenticate, authorize('SOCIETY_ADMIN'), async (req, res) => {
   try {
     const booking = await RoomBooking.findById(req.params.id);
@@ -479,7 +412,6 @@ router.delete('/bookings/:id', authenticate, authorize('SOCIETY_ADMIN'), async (
       });
     }
 
-    // Check ownership
     if (booking.bookedBy.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
@@ -490,7 +422,6 @@ router.delete('/bookings/:id', authenticate, authorize('SOCIETY_ADMIN'), async (
     booking.status = 'CANCELLED';
     await booking.save();
 
-    // Update event to remove room
     const event = await Event.findById(booking.eventId);
     if (event) {
       event.roomId = null;

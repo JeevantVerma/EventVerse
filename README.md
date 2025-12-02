@@ -43,7 +43,7 @@ A centralized platform for managing college events with role-based access, XP sy
 ## 📁 Project Structure
 
 ```
-New/
+EventVerse/
 ├── backend/
 │   ├── config/          # Database and multer config
 │   ├── models/          # Mongoose models
@@ -73,7 +73,7 @@ New/
 
 1. Navigate to backend directory:
 ```bash
-cd New/backend
+cd EventVerse/backend
 ```
 
 2. Install dependencies:
@@ -88,7 +88,7 @@ cp .env.example .env
 
 4. Update `.env` with your configuration:
 ```
-PORT=5000
+PORT=3001
 MONGODB_URI=mongodb://localhost:27017/eventverse
 JWT_SECRET=your_super_secret_jwt_key_change_this
 NODE_ENV=development
@@ -99,13 +99,13 @@ NODE_ENV=development
 npm run dev
 ```
 
-The backend will run on `http://localhost:5000`
+The backend will run on `http://localhost:3001`
 
 ### Frontend Setup
 
 1. Navigate to frontend directory:
 ```bash
-cd New/frontend
+cd EventVerse/frontend
 ```
 
 2. Install dependencies:

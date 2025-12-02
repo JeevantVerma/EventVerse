@@ -6,11 +6,9 @@ import User from '../models/User.js';
 import Room from '../models/Room.js';
 import Event from '../models/Event.js';
 
-// Get __dirname equivalent in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Load .env from parent directory
 dotenv.config({ path: join(__dirname, '..', '.env') });
 
 const connectDB = async () => {
@@ -27,18 +25,14 @@ const seedData = async () => {
   try {
     console.log('🌱 Starting database seeding...\n');
 
-    // Clear existing data
     console.log('🗑️  Clearing existing data...');
     await Room.deleteMany({});
     await Event.deleteMany({});
-    // Delete only society admin users, preserve super admins and students
     await User.deleteMany({ role: 'SOCIETY_ADMIN' });
     
-    // Create Rooms
     console.log('\n📍 Creating rooms...');
     const rooms = [];
     
-    // LP101 to LP110
     for (let i = 101; i <= 110; i++) {
       rooms.push({
         name: `LP${i}`,
@@ -49,7 +43,6 @@ const seedData = async () => {
       });
     }
     
-    // LT101-104, LT201-204, LT301-304, LT401-404
     for (let floor = 1; floor <= 4; floor++) {
       for (let room = 1; room <= 4; room++) {
         rooms.push({
@@ -59,10 +52,9 @@ const seedData = async () => {
           facilities: ['Projector', 'AC', 'Sound System', 'Whiteboard'],
           isAvailable: true,
         });
-      }
+      });
     }
     
-    // Auditoriums and Halls
     rooms.push(
       {
         name: 'AS-1',
@@ -104,7 +96,6 @@ const seedData = async () => {
     await Room.insertMany(rooms);
     console.log(`✅ Created ${rooms.length} rooms`);
 
-    // Create Society Admins
     console.log('\n👥 Creating society accounts...');
     const societies = [
       { name: 'MLSC', fullName: 'Microsoft Learn Student Chapter', email: 'mlsc@college.edu' },
@@ -119,7 +110,7 @@ const seedData = async () => {
       const user = await User.create({
         name: society.fullName,
         email: society.email,
-        passwordHash: 'password123', // Will be hashed by the pre-save hook
+        passwordHash: 'password123',
         role: 'SOCIETY_ADMIN',
         societyName: society.name,
       });
@@ -127,14 +118,12 @@ const seedData = async () => {
       console.log(`✅ Created society: ${society.name}`);
     }
 
-    // Create Events
     console.log('\n🎉 Creating events...');
     const currentDate = new Date();
     const futureDate = (days) => new Date(currentDate.getTime() + days * 24 * 60 * 60 * 1000);
     const pastDate = (days) => new Date(currentDate.getTime() - days * 24 * 60 * 60 * 1000);
 
     const events = [
-      // Past completed events (for testing conclude functionality)
       {
         title: 'React Workshop 2024',
         societyId: societyUsers[1]._id,
@@ -150,7 +139,7 @@ const seedData = async () => {
         ],
         status: 'APPROVED',
         createdBy: societyUsers[1]._id,
-        registeredParticipants: [], // Will be filled manually if needed
+        registeredParticipants: [],
       },
       {
         title: 'Tech Quiz Competition',
@@ -172,7 +161,6 @@ const seedData = async () => {
         registeredParticipants: [],
       },
 
-      // MLSC Events (2)
       {
         title: 'Azure Cloud Workshop',
         societyId: societyUsers[0]._id,
@@ -209,7 +197,6 @@ const seedData = async () => {
         createdBy: societyUsers[0]._id,
       },
 
-      // CCS Events (2)
       {
         title: 'Full Stack Development Bootcamp',
         societyId: societyUsers[1]._id,
@@ -245,7 +232,6 @@ const seedData = async () => {
         createdBy: societyUsers[1]._id,
       },
 
-      // OWASP Event (1)
       {
         title: 'Cybersecurity CTF Challenge',
         societyId: societyUsers[2]._id,
@@ -265,7 +251,6 @@ const seedData = async () => {
         createdBy: societyUsers[2]._id,
       },
 
-      // Enactus Events (3)
       {
         title: 'Social Entrepreneurship Summit',
         societyId: societyUsers[3]._id,
@@ -313,7 +298,6 @@ const seedData = async () => {
         createdBy: societyUsers[3]._id,
       },
 
-      // PWS Event (1)
       {
         title: 'Photography Exhibition & Competition',
         societyId: societyUsers[4]._id,

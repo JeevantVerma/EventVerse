@@ -1,10 +1,8 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-// Verify JWT token and attach user to request
 export const authenticate = async (req, res, next) => {
   try {
-    // Get token from Authorization header or cookies
     let token;
     
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -20,10 +18,8 @@ export const authenticate = async (req, res, next) => {
       });
     }
 
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    // Get user from database
     const user = await User.findById(decoded.userId).select('-passwordHash');
     
     if (!user) {
@@ -33,7 +29,6 @@ export const authenticate = async (req, res, next) => {
       });
     }
 
-    // Attach user to request
     req.user = user;
     next();
   } catch (error) {
@@ -45,7 +40,6 @@ export const authenticate = async (req, res, next) => {
   }
 };
 
-// Authorize based on roles
 export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!req.user) {
@@ -66,7 +60,6 @@ export const authorize = (...roles) => {
   };
 };
 
-// Check if user owns the resource (for events)
 export const checkEventOwnership = async (req, res, next) => {
   try {
     const { default: Event } = await import('../models/Event.js');
@@ -79,7 +72,6 @@ export const checkEventOwnership = async (req, res, next) => {
       });
     }
 
-    // Check if user is the creator or a super admin
     if (
       event.createdBy.toString() !== req.user._id.toString() && 
       req.user.role !== 'SUPER_ADMIN'

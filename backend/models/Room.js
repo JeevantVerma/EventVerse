@@ -21,7 +21,6 @@ const roomSchema = new mongoose.Schema(
     resources: {
       type: [String],
       default: [],
-      // e.g., ['Projector', 'Whiteboard', 'Sound System']
     },
   },
   {

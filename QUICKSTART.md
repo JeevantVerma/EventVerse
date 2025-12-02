@@ -14,13 +14,13 @@ mongod
 ### Step 2: Start the Backend
 Open a terminal and run:
 ```bash
-cd "New/backend"
+cd "EventVerse/backend"
 npm start
 ```
 
 You should see:
 ```
-🚀 Server running on port 5000
+🚀 Server running on port 3001
 📊 Environment: development
 MongoDB connected successfully
 ```
@@ -28,7 +28,7 @@ MongoDB connected successfully
 ### Step 3: Start the Frontend
 Open a **new terminal** and run:
 ```bash
-cd "New/frontend"
+cd "EventVerse/frontend"
 npm run dev
 ```
 
@@ -123,7 +123,7 @@ Visit: **http://localhost:5173/**
 
 ### Create a Room (Super Admin)
 ```bash
-curl -X POST http://localhost:5000/api/rooms \
+curl -X POST http://localhost:3001/api/rooms \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_SUPER_ADMIN_TOKEN" \
   -d '{
@@ -136,7 +136,7 @@ curl -X POST http://localhost:5000/api/rooms \
 
 ### Create an Event (Society Admin)
 ```bash
-curl -X POST http://localhost:5000/api/events \
+curl -X POST http://localhost:3001/api/events \
   -H "Authorization: Bearer YOUR_SOCIETY_ADMIN_TOKEN" \
   -F "title=Hackathon 2024" \
   -F "category=Technical" \
@@ -151,7 +151,7 @@ curl -X POST http://localhost:5000/api/events \
 
 ### Get Leaderboard
 ```bash
-curl http://localhost:5000/api/leaderboard
+curl http://localhost:3001/api/leaderboard
 ```
 
 ---
@@ -160,7 +160,7 @@ curl http://localhost:5000/api/leaderboard
 
 ### Backend won't start
 - **Check MongoDB**: Ensure MongoDB is running
-- **Port in use**: Change PORT in `.env` if 5000 is occupied
+- **Port in use**: Change PORT in `.env` if 3001 is occupied
 - **Dependencies**: Run `npm install` again
 
 ### Frontend won't start

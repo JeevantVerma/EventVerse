@@ -15,7 +15,6 @@ const eventSchema = new mongoose.Schema(
     societyName: {
       type: String,
       required: true,
-      // Denormalized for display
     },
     category: {
       type: String,
@@ -48,17 +47,14 @@ const eventSchema = new mongoose.Schema(
     approvalRemarks: {
       type: String,
       default: '',
-      // Optional note from super admin
     },
     proposalPdfUrl: {
       type: String,
       default: null,
-      // URL/path for uploaded proposal PDF
     },
     imageUrl: {
       type: String,
       default: null,
-      // URL/path for event image/poster
     },
     maxParticipants: {
       type: Number,
@@ -76,7 +72,6 @@ const eventSchema = new mongoose.Schema(
         position: {
           type: String,
           required: true,
-          // e.g., "First", "Second", "Third"
         },
         title: {
           type: String,
@@ -92,7 +87,6 @@ const eventSchema = new mongoose.Schema(
       type: Map,
       of: mongoose.Schema.Types.ObjectId,
       default: new Map(),
-      // e.g., { "First": userId, "Second": userId }
     },
     roomId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -102,7 +96,6 @@ const eventSchema = new mongoose.Schema(
     roomName: {
       type: String,
       default: null,
-      // Denormalized, optional
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -115,7 +108,6 @@ const eventSchema = new mongoose.Schema(
   }
 );
 
-// Index for efficient queries
 eventSchema.index({ status: 1, startDateTime: 1 });
 eventSchema.index({ societyId: 1 });
 eventSchema.index({ category: 1 });

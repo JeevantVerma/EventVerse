@@ -6,18 +6,12 @@ import { getLeaderboard, getUserRank } from '../utils/xpSystem.js';
 
 const router = express.Router();
 
-/**
- * @route   GET /api/profile
- * @desc    Get detailed profile for logged-in user
- * @access  Private
- */
 router.get('/profile', authenticate, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-passwordHash');
     
     let additionalData = {};
 
-    // For students, include participation history and rank
     if (user.role === 'STUDENT') {
       const registeredEvents = await Event.find({
         registeredParticipants: user._id,
@@ -32,7 +26,6 @@ router.get('/profile', authenticate, async (req, res) => {
       };
     }
 
-    // For society admins, include their events
     if (user.role === 'SOCIETY_ADMIN') {
       const societyEvents = await Event.find({ createdBy: user._id })
         .select('title status startDateTime category')
@@ -59,11 +52,6 @@ router.get('/profile', authenticate, async (req, res) => {
   }
 });
 
-/**
- * @route   PUT /api/profile
- * @desc    Update user profile
- * @access  Private
- */
 router.put('/', authenticate, async (req, res) => {
   try {
     const { name, favoriteCategories } = req.body;
@@ -72,7 +60,6 @@ router.put('/', authenticate, async (req, res) => {
 
     if (name) user.name = name;
     
-    // Only students can update favorite categories
     if (favoriteCategories && user.role === 'STUDENT') {
       user.favoriteCategories = favoriteCategories;
     }
@@ -94,11 +81,6 @@ router.put('/', authenticate, async (req, res) => {
   }
 });
 
-/**
- * @route   GET /api/leaderboard
- * @desc    Get global leaderboard of top XP students
- * @access  Public
- */
 router.get('/leaderboard', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10;
@@ -118,11 +100,6 @@ router.get('/leaderboard', async (req, res) => {
   }
 });
 
-/**
- * @route   GET /api/stats/overview
- * @desc    Get overview statistics (SUPER_ADMIN only)
- * @access  Private (SUPER_ADMIN)
- */
 router.get('/stats/overview', authenticate, authorize('SUPER_ADMIN'), async (req, res) => {
   try {
     const totalEvents = await Event.countDocuments();
@@ -133,20 +110,17 @@ router.get('/stats/overview', authenticate, authorize('SUPER_ADMIN'), async (req
     const totalStudents = await User.countDocuments({ role: 'STUDENT' });
     const totalSocieties = await User.countDocuments({ role: 'SOCIETY_ADMIN' });
 
-    // Events by category
     const eventsByCategory = await Event.aggregate([
       { $group: { _id: '$category', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
     ]);
 
-    // Events by society
     const eventsBySociety = await Event.aggregate([
       { $group: { _id: '$societyName', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 10 },
     ]);
 
-    // Upcoming events
     const upcomingEvents = await Event.find({
       status: 'APPROVED',
       startDateTime: { $gte: new Date() },
@@ -176,29 +150,21 @@ router.get('/stats/overview', authenticate, authorize('SUPER_ADMIN'), async (req
   }
 });
 
-/**
- * @route   GET /api/highlights
- * @desc    Get personalized event highlights for students
- * @access  Private (STUDENT)
- */
 router.get('/highlights', authenticate, authorize('STUDENT'), async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     
-    // Get user's registered events
     const registeredEvents = await Event.find({
       registeredParticipants: user._id,
       startDateTime: { $gte: new Date() },
     }).select('startDateTime endDateTime');
 
-    // Build query for recommended events
     const query = {
       status: 'APPROVED',
       startDateTime: { $gte: new Date() },
-      registeredParticipants: { $ne: user._id }, // Not already registered
+      registeredParticipants: { $ne: user._id },
     };
 
-    // Filter by favorite categories if set
     if (user.favoriteCategories && user.favoriteCategories.length > 0) {
       query.category = { $in: user.favoriteCategories };
     }
@@ -207,7 +173,6 @@ router.get('/highlights', authenticate, authorize('STUDENT'), async (req, res) =
       .sort({ startDateTime: 1 })
       .limit(10);
 
-    // Filter out events that clash with registered events
     recommendedEvents = recommendedEvents.filter(event => {
       return !registeredEvents.some(registered => 
         (event.startDateTime >= registered.startDateTime && event.startDateTime < registered.endDateTime) ||

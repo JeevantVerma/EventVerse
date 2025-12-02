@@ -6,7 +6,6 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Configure storage for proposal PDFs
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, '../uploads/proposals'));
@@ -17,7 +16,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// File filter - only PDFs
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === 'application/pdf') {
     cb(null, true);
@@ -26,11 +24,10 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Configure multer
 export const uploadProposal = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB max
+    fileSize: 10 * 1024 * 1024,
   },
 });
