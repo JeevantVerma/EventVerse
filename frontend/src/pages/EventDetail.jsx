@@ -5,6 +5,7 @@ import { useToast } from '../components/Toast/Toast';
 import PublicNavbar from '../components/Navbar/PublicNavbar';
 import StudentNavbar from '../components/Navbar/StudentNavbar';
 import Modal from '../components/Modal/Modal';
+import Footer from '../components/Footer/Footer';
 import api from '../api/axios';
 import './EventDetail.css';
 
@@ -47,7 +48,6 @@ const EventDetail = () => {
       const response = await api.post(`/events/${id}/register`);
       toast.success('🎉 Successfully registered for event! You earned +10 XP!');
       
-      // Refresh user data to update XP in navbar
       await refreshUser();
       
       await fetchEventDetails();
@@ -287,6 +287,8 @@ const EventDetail = () => {
           You can register again later if spots are available.
         </p>
       </Modal>
+      
+      <Footer />
     </div>
   );
 };

@@ -28,7 +28,6 @@ const SocietyAdminDashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      // Fetch events created by this society admin
       const response = await api.get('/events', {
         params: {
           societyName: user.societyName
@@ -37,7 +36,6 @@ const SocietyAdminDashboard = () => {
       const myEvents = response.data.events || [];
       setEvents(myEvents);
 
-      // Calculate stats
       setStats({
         totalEvents: myEvents.length,
         approvedEvents: myEvents.filter(e => e.status === 'APPROVED').length,

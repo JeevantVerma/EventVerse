@@ -27,7 +27,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(''); // Clear previous errors
+    setError('');
 
     try {
       console.log('Attempting login with:', formData.email);
@@ -37,7 +37,6 @@ const Login = () => {
       if (result.success) {
         toast.success('Login successful!');
         
-        // Navigate based on user role
         if (result.user.role === 'STUDENT') {
           navigate('/student/dashboard');
         } else if (result.user.role === 'SOCIETY_ADMIN') {

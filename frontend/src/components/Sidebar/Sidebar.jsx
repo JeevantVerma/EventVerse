@@ -12,7 +12,6 @@ const Sidebar = () => {
     navigate('/');
   };
 
-  // Define menu items based on user role
   const getMenuItems = () => {
     if (user?.role === 'SOCIETY_ADMIN') {
       return [

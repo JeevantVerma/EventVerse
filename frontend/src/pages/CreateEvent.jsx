@@ -7,7 +7,7 @@ import api from '../api/axios';
 import './CreateEvent.css';
 
 const CreateEvent = () => {
-  const { id } = useParams(); // For edit mode
+  const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
   const toast = useToast();
@@ -169,7 +169,6 @@ const CreateEvent = () => {
       submitData.append('maxParticipants', formData.maxParticipants);
       submitData.append('societyName', user.name);
 
-      // Filter out empty prizes
       const validPrizes = prizes.filter(p => p.title.trim());
       submitData.append('prizes', JSON.stringify(validPrizes));
 
@@ -190,14 +189,12 @@ const CreateEvent = () => {
 
       const eventId = response.data.event._id;
 
-      // Show appropriate success message
       if (formData.proposalPdf) {
         toast.success('Event submitted for approval! It will be available to students once approved.');
       } else {
         toast.success(isEditMode ? 'Event updated successfully!' : 'Event saved as draft!');
       }
 
-      // Submit for approval if requested (only if not already submitted via PDF)
       if (submitForApproval && !formData.proposalPdf) {
         await api.put(`/events/${eventId}/submit`);
       }

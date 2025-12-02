@@ -213,7 +213,6 @@ const Approvals = () => {
         )}
       </div>
 
-      {/* Approve Modal */}
       <Modal
         isOpen={showApproveModal}
         onClose={() => !processing && setShowApproveModal(false)}
@@ -245,7 +244,6 @@ const Approvals = () => {
         </p>
       </Modal>
 
-      {/* Reject Modal */}
       <Modal
         isOpen={showRejectModal}
         onClose={() => !processing && setShowRejectModal(false)}

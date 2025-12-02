@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import PublicNavbar from '../components/Navbar/PublicNavbar';
+import Footer from '../components/Footer/Footer';
 import './Home.css';
 
 const Home = () => {
@@ -94,6 +95,8 @@ const Home = () => {
           </Link>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };

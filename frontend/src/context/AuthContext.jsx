@@ -15,7 +15,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Load user from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
@@ -27,7 +26,6 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  // Login function
   const login = async (email, password) => {
     try {
       console.log('AuthContext: Sending login request to /auth/login');
@@ -49,7 +47,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register function
   const register = async (userData) => {
     try {
       const response = await api.post('/auth/register-student', userData);
@@ -66,7 +63,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register admin function
   const registerAdmin = async (userData) => {
     try {
       const response = await api.post('/auth/register-admin', userData);
@@ -83,7 +79,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout function
   const logout = async () => {
     try {
       await api.post('/auth/logout');
@@ -97,7 +92,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Refresh user data
   const refreshUser = async () => {
     try {
       const response = await api.get('/auth/me');

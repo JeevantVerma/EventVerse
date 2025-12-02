@@ -184,7 +184,6 @@ const RoomApprovals = () => {
         )}
       </div>
 
-      {/* Approve Modal */}
       <Modal
         isOpen={showApproveModal}
         onClose={() => setShowApproveModal(false)}
@@ -219,7 +218,6 @@ const RoomApprovals = () => {
         </div>
       </Modal>
 
-      {/* Reject Modal */}
       <Modal
         isOpen={showRejectModal}
         onClose={() => {

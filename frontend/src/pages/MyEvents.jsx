@@ -13,7 +13,7 @@ const MyEvents = () => {
   const navigate = useNavigate();
 
   const [events, setEvents] = useState([]);
-  const [filter, setFilter] = useState('all'); // all, upcoming, past, completed
+  const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [cancelModal, setCancelModal] = useState({ isOpen: false, eventId: null, eventTitle: '' });
 

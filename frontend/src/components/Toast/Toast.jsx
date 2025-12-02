@@ -30,7 +30,6 @@ const Toast = ({ message, type = 'info', duration = 3000, onClose }) => {
   );
 };
 
-// Toast container component
 export const ToastContainer = ({ toasts, removeToast }) => {
   return (
     <div className="toast-container">
@@ -47,7 +46,6 @@ export const ToastContainer = ({ toasts, removeToast }) => {
   );
 };
 
-// Custom hook for using toasts
 export const useToast = () => {
   const [toasts, setToasts] = useState([]);
 

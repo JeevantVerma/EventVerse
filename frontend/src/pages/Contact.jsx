@@ -34,7 +34,6 @@ const Contact = () => {
 
     setSubmitting(true);
     
-    // Simulate sending email (in real app, would call API)
     setTimeout(() => {
       toast.success('Message sent! We\'ll get back to you soon.');
       setFormData({
@@ -174,6 +173,8 @@ const Contact = () => {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 };

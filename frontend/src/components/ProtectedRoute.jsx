@@ -18,7 +18,6 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   }
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    // Redirect to appropriate dashboard based on role
     if (user.role === 'STUDENT') {
       return <Navigate to="/student/dashboard" replace />;
     } else if (user.role === 'SOCIETY_ADMIN') {

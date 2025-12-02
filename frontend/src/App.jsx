@@ -4,7 +4,6 @@ import { ToastContainer, useToast } from './components/Toast/Toast';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
 
-// Public Pages
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -14,17 +13,14 @@ import Leaderboard from './pages/Leaderboard';
 import About from './pages/About';
 import Contact from './pages/Contact';
 
-// Student Pages
 import StudentDashboard from './pages/StudentDashboard';
 import MyEvents from './pages/MyEvents';
 
-// Society Admin Pages
 import SocietyAdminDashboard from './pages/SocietyAdminDashboard';
 import CreateEvent from './pages/CreateEvent';
 import ConcludeEvent from './pages/ConcludeEvent';
 import RoomBooking from './pages/RoomBooking';
 
-// Super Admin Pages
 import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import Approvals from './pages/Approvals';
 import RoomApprovals from './pages/RoomApprovals';
@@ -38,7 +34,6 @@ function AppContent() {
     <>
       <Router>
         <Routes>
-          {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/events" element={<EventsList />} />
           <Route path="/events/:id" element={<EventDetail />} />
@@ -63,7 +58,6 @@ function AppContent() {
             }
           />
 
-          {/* Student Routes */}
           <Route
             path="/student/dashboard"
             element={
@@ -81,7 +75,6 @@ function AppContent() {
             }
           />
 
-          {/* Society Admin Routes */}
           <Route
             path="/society/dashboard"
             element={
@@ -123,7 +116,6 @@ function AppContent() {
             }
           />
 
-          {/* Super Admin Routes */}
           <Route
             path="/admin/dashboard"
             element={
@@ -149,7 +141,6 @@ function AppContent() {
             }
           />
 
-          {/* Catch all - redirect to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PublicNavbar from '../components/Navbar/PublicNavbar';
 import StudentNavbar from '../components/Navbar/StudentNavbar';
+import Footer from '../components/Footer/Footer';
 import api from '../api/axios';
 import './Events.css';
 
@@ -154,6 +155,8 @@ const EventsList = () => {
           </div>
         )}
       </div>
+      
+      <Footer />
     </div>
   );
 };

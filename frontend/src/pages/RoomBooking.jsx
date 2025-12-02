@@ -101,7 +101,6 @@ const RoomBooking = () => {
   };
 
   const isRoomAvailable = (room) => {
-    // Simple availability check - can be enhanced
     return room.isAvailable !== false;
   };
 
@@ -124,7 +123,6 @@ const RoomBooking = () => {
           <p>Book rooms for your events</p>
         </div>
 
-        {/* My Bookings Section */}
         <div className="section">
           <h2>My Bookings</h2>
           {myBookings.length === 0 ? (
@@ -165,7 +163,6 @@ const RoomBooking = () => {
           )}
         </div>
 
-        {/* Available Rooms Section */}
         <div className="section">
           <h2>Available Rooms</h2>
           <div className="rooms-grid">
@@ -204,7 +201,6 @@ const RoomBooking = () => {
         </div>
       </div>
 
-      {/* Booking Modal */}
       <Modal
         isOpen={showBookModal}
         onClose={() => setShowBookModal(false)}

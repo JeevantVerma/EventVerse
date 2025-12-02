@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import PublicNavbar from '../components/Navbar/PublicNavbar';
 import StudentNavbar from '../components/Navbar/StudentNavbar';
+import Footer from '../components/Footer/Footer';
 import api from '../api/axios';
 import './Leaderboard.css';
 
@@ -76,6 +77,8 @@ const Leaderboard = () => {
           </div>
         )}
       </div>
+      
+      <Footer />
     </div>
   );
 };

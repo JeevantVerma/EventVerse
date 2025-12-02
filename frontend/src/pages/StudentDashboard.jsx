@@ -68,7 +68,6 @@ const StudentDashboard = () => {
         </div>
 
         <div className="dashboard-grid">
-          {/* XP Card */}
           <div className="dashboard-card xp-card">
             <h2 className="card-title">Your XP Progress</h2>
             <div className="xp-display-large">
@@ -97,7 +96,6 @@ const StudentDashboard = () => {
             </div>
           </div>
 
-          {/* Rank Card */}
           <div className="dashboard-card rank-card">
             <h2 className="card-title">Your Rank</h2>
             <div className="rank-display">
@@ -109,7 +107,6 @@ const StudentDashboard = () => {
             </Link>
           </div>
 
-          {/* Highlights Section */}
           <div className="dashboard-card highlights-card">
             <h2 className="card-title">✨ Recommended For You</h2>
             {highlights.length > 0 ? (
@@ -140,7 +137,6 @@ const StudentDashboard = () => {
             </Link>
           </div>
 
-          {/* Upcoming Events */}
           <div className="dashboard-card upcoming-card">
             <h2 className="card-title">📅 My Upcoming Events</h2>
             {upcomingEvents.length > 0 ? (

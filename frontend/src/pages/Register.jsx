@@ -8,7 +8,7 @@ import './Auth.css';
 const categories = ['Technical', 'Cultural', 'Sports', 'Literary', 'Workshops', 'Other'];
 
 const Register = () => {
-  const [userType, setUserType] = useState('student'); // student, society-admin, super-admin
+  const [userType, setUserType] = useState('student');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -75,7 +75,6 @@ const Register = () => {
     if (result.success) {
       toast.success('Registration successful!');
       
-      // Navigate based on user role
       if (result.user.role === 'STUDENT') {
         navigate('/student/dashboard');
       } else if (result.user.role === 'SOCIETY_ADMIN') {
@@ -99,7 +98,6 @@ const Register = () => {
           <h1 className="auth-title">Create Account</h1>
           <p className="auth-subtitle">Join EventVerse today</p>
 
-          {/* User Type Selection */}
           <div className="user-type-selector">
             <button
               type="button"

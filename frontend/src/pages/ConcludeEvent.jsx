@@ -25,7 +25,6 @@ const ConcludeEvent = () => {
       const eventData = response.data.event;
       setEvent(eventData);
 
-      // Initialize winners state based on prizes
       if (eventData.prizes && eventData.prizes.length > 0) {
         const initialWinners = {};
         eventData.prizes.forEach(prize => {
@@ -51,14 +50,12 @@ const ConcludeEvent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate that at least one winner is selected
     const hasWinner = Object.values(winners).some(w => w);
     if (!hasWinner) {
       toast.error('Please select at least one winner');
       return;
     }
 
-    // Check for duplicate winners
     const selectedWinners = Object.values(winners).filter(w => w);
     const uniqueWinners = new Set(selectedWinners);
     if (selectedWinners.length !== uniqueWinners.size) {

@@ -14,7 +14,6 @@ const PublicRoute = ({ children }) => {
   }
 
   if (user) {
-    // Redirect authenticated users to their appropriate dashboard
     if (user.role === 'STUDENT') {
       return <Navigate to="/student/dashboard" replace />;
     } else if (user.role === 'SOCIETY_ADMIN') {
