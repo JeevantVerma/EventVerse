@@ -29,6 +29,10 @@ const allowedOrigins = [
   'https://eventverse.pages.dev',
   'https://eventverse.mlsctiet.com',
   'https://eventverse.jeevantverma.tech',
+  'https://eventverse.jeevantverma.me',
+  'https://eventverse-backend.onrender.com',
+  'https://eventverse-backend.jeevantverma.me',
+  'https://eventverse-1.onrender.com',
 ];
 
 app.use(cors({
